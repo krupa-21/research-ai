@@ -1,0 +1,1566 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+
+        body {
+          overscroll-behavior: none;
+        }
+
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(130, 123, 95, 0.35);
+        border-radius: 999px;
+      }
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#8c5027",
+              "on-primary": "#fff7f5",
+              "surface-bright": "#fff9ed",
+              "tertiary-container": "#d7cafe",
+              "inverse-primary": "#eb9f6f",
+              "surface-dim": "#e4daba",
+              "secondary-fixed-dim": "#e7d39e",
+              "surface-container-low": "#fcf3db",
+              "on-secondary": "#fff8ee",
+              "on-primary-fixed": "#2c1000",
+              outline: "#827b5f",
+              "on-primary-fixed-variant": "#5d2c04",
+              "primary-fixed": "#eb9f6f",
+              "on-tertiary-fixed-variant": "#544a76",
+              "primary-container": "#eb9f6f",
+              "surface-container-lowest": "#ffffff",
+              primary: "#8c5027",
+              "on-error": "#fff7f6",
+              "on-secondary-fixed-variant": "#695a30",
+              "on-background": "#38321c",
+              "on-tertiary-container": "#4b416c",
+              "on-surface": "#38321c",
+              "surface-container-high": "#f1e8cb",
+              "on-tertiary-fixed": "#372e58",
+              "inverse-surface": "#110e05",
+              "surface-container-highest": "#ece2c2",
+              "secondary-container": "#f6e1ab",
+              "surface-variant": "#ece2c2",
+              background: "#fff9ed",
+              "error-container": "#fd795a",
+              "tertiary-fixed-dim": "#c9bdf0",
+              "on-tertiary": "#fdf7ff",
+              "secondary-fixed": "#f6e1ab",
+              "on-secondary-container": "#5e5027",
+              error: "#a73b21",
+              "tertiary-fixed": "#d7cafe",
+              "on-surface-variant": "#665f45",
+              "on-error-container": "#6e1400",
+              "on-primary-container": "#522300",
+              "outline-variant": "#bbb293",
+              "surface-container": "#f7edd3",
+              surface: "#fff9ed",
+              secondary: "#6c5e33",
+              "on-secondary-fixed": "#4b3e16",
+              tertiary: "#635985",
+              "primary-fixed-dim": "#db9263",
+              "inverse-on-surface": "#a39d8c",
+              "tertiary-dim": "#574d79",
+              "error-dim": "#791903",
+              "secondary-dim": "#605228",
+              "primary-dim": "#7d441c",
+            },
+
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+
+            spacing: {
+              base: "8px",
+              xs: "4px",
+              lg: "24px",
+              gutter: "24px",
+              md: "16px",
+              sm: "12px",
+              margin: "32px",
+              xl: "32px",
+              "container-max-width": "1200px",
+              "section-gap": "64px",
+              "sidebar-width": "280px",
+              unit: "8px",
+            },
+
+            fontFamily: {
+              "display-hero": ["Plus Jakarta Sans"],
+              "display-lg": ["Sedan SC"],
+              "headline-lg": ["Sedan SC"],
+              "headline-md": ["Sedan SC"],
+              "body-lg": ["Questrial"],
+              "body-md": ["Questrial"],
+              "label-caps": ["Inter"],
+              "code-sm": ["Inter"],
+              headline: ["Sedan SC"],
+              display: ["Sedan SC"],
+              body: ["Questrial"],
+              label: ["Inter"],
+            },
+
+            fontSize: {
+              "display-hero": [
+                "48px",
+                {
+                  lineHeight: "1.2",
+                  fontWeight: "700",
+                  letterSpacing: "-0.02em",
+                },
+              ],
+
+              "display-lg": [
+                "48px",
+                {
+                  lineHeight: "56px",
+                  fontWeight: "400",
+                },
+              ],
+
+              "headline-lg": [
+                "32px",
+                {
+                  lineHeight: "40px",
+                  fontWeight: "400",
+                },
+              ],
+
+              "headline-md": [
+                "24px",
+                {
+                  lineHeight: "32px",
+                  fontWeight: "400",
+                },
+              ],
+
+              "body-lg": [
+                "16px",
+                {
+                  lineHeight: "24px",
+                  fontWeight: "400",
+                },
+              ],
+
+              "body-md": [
+                "14px",
+                {
+                  lineHeight: "20px",
+                  fontWeight: "400",
+                },
+              ],
+
+              "label-caps": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  fontWeight: "600",
+                  letterSpacing: "0.05em",
+                },
+              ],
+
+              "code-sm": [
+                "13px",
+                {
+                  lineHeight: "18px",
+                  fontWeight: "400",
+                },
+              ],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sedan+SC&family=Questrial&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Material Symbols -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 500,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+
+      .paper-content h1,
+      .paper-content h2,
+      .paper-content h3,
+      .paper-content h4 {
+        font-family: "Sedan SC", serif;
+        color: #38321c;
+      }
+
+      .paper-content p {
+        margin: 0 0 1rem 0;
+      }
+
+      .paper-content ul {
+        padding-left: 1.25rem;
+        margin: 0.75rem 0 1.25rem;
+      }
+
+      .paper-content li {
+        margin-bottom: 0.5rem;
+      }
+
+      .paper-content strong {
+        color: #38321c;
+        font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+        aside {
+          width: 76px !important;
+        }
+
+        aside nav span:last-child,
+        aside .sidebar-label {
+          display: none;
+        }
+
+        .pl-sidebar-width {
+          padding-left: 76px !important;
+        }
+
+        .left-sidebar-width {
+          left: 76px !important;
+        }
+
+        .research-grid {
+          grid-template-columns: 1fr !important;
+        }
+
+        .research-main {
+          grid-column: span 12 !important;
+        }
+
+        .research-sidebar {
+          grid-column: span 12 !important;
+          border-left: 0 !important;
+          border-top: 1px solid rgba(130, 123, 95, 0.3);
+          padding-left: 0 !important;
+          padding-top: 2rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-surface font-body-md text-on-surface">
+    <!-- =========================================================
+         SIDEBAR
+    ========================================================== -->
+
+    <aside
+      class="fixed left-0 top-0 h-full w-sidebar-width bg-surface-container-lowest z-50 flex flex-col shadow-[1px_0_0_rgba(0,0,0,0.05)]"
+    >
+      <div class="p-gutter flex flex-col gap-unit">
+        <div class="mb-8 px-4 pt-2">
+          <div class="font-display-lg text-2xl text-primary">Research AI</div>
+
+          <div class="sidebar-label text-xs text-on-surface-variant mt-1">
+            Local research agent
+          </div>
+        </div>
+
+        <nav class="space-y-1">
+          <a
+            aria-current="page"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container text-on-primary font-bold shadow-sm"
+            data-path="search"
+            href="#researchForm"
+          >
+            <span class="material-symbols-outlined text-[20px]"> search </span>
+
+            <span
+              class="sidebar-label font-label-caps text-label-caps uppercase"
+            >
+              Search
+            </span>
+          </a>
+
+          <!-- <a
+            class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="history"
+            href="#research-card"
+          >
+            <span class="material-symbols-outlined text-[20px]"> history </span>
+
+            <span
+              class="sidebar-label font-label-caps text-label-caps uppercase"
+            >
+              History
+            </span>
+          </a> -->
+
+          <!-- <a
+            class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="saved"
+            href="#saveResearchBtn"
+          >
+            <span class="material-symbols-outlined text-[20px]">
+              bookmark
+            </span>
+
+            <span
+              class="sidebar-label font-label-caps text-label-caps uppercase"
+            >
+              Saved
+            </span>
+          </a> -->
+
+          <!-- <a
+            class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all"
+            data-path="settings"
+            href="#backendStatus"
+          >
+            <span class="material-symbols-outlined text-[20px]">
+              settings
+            </span>
+
+            <span
+              class="sidebar-label font-label-caps text-label-caps uppercase"
+            >
+              Settings
+            </span>
+          </a> -->
+        </nav>
+      </div>
+
+      <div class="mt-auto p-gutter border-t border-outline-variant/30">
+        <div class="sidebar-label text-xs text-on-surface-variant">
+          Powered by Ollama
+        </div>
+      </div>
+    </aside>
+
+    <!-- =========================================================
+         MAIN AREA
+    ========================================================== -->
+
+    <div class="pl-sidebar-width">
+      <!-- HEADER -->
+
+      <header
+        class="fixed top-0 left-sidebar-width right-0 h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant/20 z-40 px-gutter flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary">
+            auto_awesome
+          </span>
+
+          <span
+            class="font-label-caps text-label-caps uppercase tracking-widest text-on-surface-variant"
+          >
+            Deep Research Workspace
+          </span>
+        </div>
+
+        <div id="headerModel" class="text-xs text-on-surface-variant">
+          Qwen2.5
+        </div>
+      </header>
+
+      <!-- =======================================================
+           MAIN CONTENT
+      ======================================================== -->
+
+      <main class="pt-16 min-h-screen">
+        <div class="max-w-[1000px] mx-auto px-gutter py-section-gap">
+          <div class="flex flex-col w-full h-full gap-section-gap relative">
+            <!-- =================================================
+                 HERO
+            ================================================== -->
+
+            <section class="flex flex-col gap-6 pt-12 items-center text-center">
+              <h1
+                class="font-display-hero text-display-hero text-on-surface leading-tight max-w-2xl mx-auto"
+              >
+                Illuminate the unknown.<br />
+
+                <span class="text-tertiary"> Deep research </span>
+
+                in seconds.
+              </h1>
+
+              <p
+                class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto"
+              >
+                Ask a complex question. Our agents will scour, synthesize, and
+                format a comprehensive brief.
+              </p>
+
+              <!-- SEARCH FORM -->
+
+              <form
+                id="researchForm"
+                class="relative w-full max-w-2xl mt-8 group"
+              >
+                <div
+                  class="absolute inset-0 bg-primary/5 rounded-xl blur-md transition-opacity opacity-0 group-focus-within:opacity-100"
+                ></div>
+
+                <div
+                  class="relative flex items-center bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 transition-all duration-300 focus-within:shadow-md focus-within:border-primary/40"
+                >
+                  <span
+                    class="material-symbols-outlined absolute left-4 text-primary text-xl"
+                  >
+                    magic_button
+                  </span>
+
+                  <input
+                    id="researchTopic"
+                    autocomplete="off"
+                    maxlength="500"
+                    class="w-full bg-transparent py-4 pl-12 pr-32 font-body-lg text-body-lg text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-0"
+                    placeholder="e.g. Synthesize the latest advancements in solid-state batteries..."
+                    type="text"
+                  />
+
+                  <button
+                    id="researchBtn"
+                    type="submit"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 relative overflow-hidden bg-primary text-on-primary px-5 py-2 rounded-md font-label-caps text-label-caps uppercase hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-sm"
+                  >
+                    <span id="btnText">
+                      Research
+
+                      <span
+                        class="material-symbols-outlined text-sm align-middle"
+                      >
+                        arrow_forward
+                      </span>
+                    </span>
+
+                    <span
+                      id="btnLoader"
+                      class="absolute inset-0 flex items-center justify-center bg-primary opacity-0 pointer-events-none transition-opacity"
+                    >
+                      <span class="material-symbols-outlined animate-spin">
+                        progress_activity
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </form>
+
+              <!-- BACKEND STATUS -->
+
+              <div
+                id="backendStatus"
+                class="mt-3 text-sm text-on-surface-variant/70"
+              >
+                Checking local AI backend...
+              </div>
+            </section>
+
+            <!-- =================================================
+                 TRENDING
+            ================================================== -->
+
+            <div
+              class="flex flex-wrap items-center justify-center gap-4 mt-6 text-on-surface-variant"
+            >
+              <span
+                class="font-label-caps text-label-caps uppercase opacity-70"
+              >
+                Trending:
+              </span>
+
+              <div class="flex flex-wrap justify-center gap-3">
+                <button
+                  type="button"
+                  class="trending-btn px-4 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-sm border border-outline-variant/30"
+                >
+                  Quantum Computing
+                </button>
+
+                <button
+                  type="button"
+                  class="trending-btn px-4 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-sm border border-outline-variant/30"
+                >
+                  CRISPR Applications
+                </button>
+
+                <button
+                  type="button"
+                  class="trending-btn px-4 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-sm border border-outline-variant/30"
+                >
+                  Neuroplasticity
+                </button>
+              </div>
+            </div>
+
+            <!-- =================================================
+                 RESEARCH CARD
+            ================================================== -->
+
+            <section
+              id="research-card"
+              class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col relative mt-8 mb-24 transition-all duration-700"
+            >
+              <!-- TOP BANNER -->
+
+              <div
+                class="relative h-32 bg-surface-container-low border-b border-outline-variant/20 overflow-hidden"
+              >
+                <div
+                  class="absolute inset-0 opacity-10 mix-blend-multiply bg-primary"
+                ></div>
+
+                <div
+                  class="absolute top-8 left-10 bg-surface-container-lowest/90 backdrop-blur-md border border-primary/20 text-on-surface px-4 py-1.5 rounded-full font-label-caps text-label-caps uppercase tracking-widest flex items-center gap-2 shadow-sm"
+                >
+                  <span
+                    class="material-symbols-outlined text-[14px] text-primary"
+                  >
+                    shield_with_heart
+                  </span>
+
+                  <span class="text-[11px] font-bold">
+                    Comprehensive Brief
+                  </span>
+                </div>
+              </div>
+
+              <!-- PAPER CONTENT -->
+
+              <div class="px-12 pb-16 pt-10 flex flex-col gap-10">
+                <!-- TITLE -->
+
+                <div class="relative">
+                  <h2
+                    id="paperTitle"
+                    class="font-display-hero text-[48px] leading-[1.2] text-on-surface mb-6 relative z-10"
+                  >
+                    Ready for your research query.
+                  </h2>
+
+                  <div class="border-l-2 border-primary pl-6 py-1">
+                    <p
+                      id="paperSummary"
+                      class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl leading-relaxed"
+                    >
+                      Enter a topic above and Research AI will use your local
+                      Qwen2.5 model and available research tools to generate a
+                      structured research paper.
+                    </p>
+                  </div>
+                </div>
+
+                <hr class="border-t border-outline-variant/30" />
+
+                <!-- RESEARCH GRID -->
+
+                <div class="grid grid-cols-12 gap-12 research-grid">
+                  <!-- =================================================
+                       RESEARCH BODY
+                  ================================================== -->
+
+                  <div
+                    id="paperBody"
+                    class="col-span-8 flex flex-col gap-8 research-main"
+                  >
+                    <div class="group">
+                      <h3
+                        class="font-headline-lg text-headline-lg text-on-surface mb-4 flex items-center gap-3"
+                      >
+                        <span
+                          class="text-primary font-label-caps text-sm bg-primary/5 px-2 py-0.5 rounded border border-primary/20"
+                        >
+                          01
+                        </span>
+
+                        Research output
+                      </h3>
+
+                      <!-- ACTUAL AI OUTPUT -->
+
+                      <div
+                        id="paperContent"
+                        class="paper-content font-body-md text-body-md text-on-surface-variant leading-relaxed"
+                      >
+                        <p>Your generated research paper will appear here.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- =================================================
+                       RIGHT SIDEBAR
+                  ================================================== -->
+
+                  <div
+                    class="col-span-4 flex flex-col gap-6 border-l border-outline-variant/30 pl-8 research-sidebar"
+                  >
+                    <h4
+                      class="font-label-caps text-label-caps text-on-surface-variant tracking-widest uppercase mb-2"
+                    >
+                      Key Metrics
+                    </h4>
+
+                    <!-- STATUS -->
+
+                    <div
+                      class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/30"
+                    >
+                      <div
+                        id="metricOne"
+                        class="text-primary font-display-hero text-[32px] mb-1"
+                      >
+                        —
+                      </div>
+
+                      <div
+                        class="font-body-md text-sm text-on-surface-variant font-bold"
+                      >
+                        Research status
+                      </div>
+
+                      <p
+                        id="metricOneText"
+                        class="font-body-md text-xs text-on-surface-variant/70 mt-2"
+                      >
+                        Waiting for a completed research run.
+                      </p>
+                    </div>
+
+                    <!-- SOURCES COUNT -->
+
+                    <div
+                      class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/30"
+                    >
+                      <div
+                        id="metricTwo"
+                        class="text-tertiary font-display-hero text-[32px] mb-1"
+                      >
+                        —
+                      </div>
+
+                      <div
+                        class="font-body-md text-sm text-on-surface-variant font-bold"
+                      >
+                        Sources found
+                      </div>
+
+                      <p
+                        id="metricTwoText"
+                        class="font-body-md text-xs text-on-surface-variant/70 mt-2"
+                      >
+                        Sources will appear after research.
+                      </p>
+                    </div>
+
+                    <!-- SOURCES -->
+
+                    <div class="mt-4 pt-4 border-t border-outline-variant/30">
+                      <h4
+                        class="font-label-caps text-label-caps text-on-surface-variant tracking-widest uppercase mb-4"
+                      >
+                        Sources Analyzed
+                      </h4>
+
+                      <div id="sourceList" class="flex flex-wrap gap-2">
+                        <span
+                          class="px-2 py-1 bg-surface-container border border-outline-variant/30 rounded font-code-sm text-xs text-on-surface"
+                        >
+                          Waiting for research
+                        </span>
+                      </div>
+
+                      <!-- TOOLS -->
+
+                      <h4
+                        class="font-label-caps text-label-caps text-on-surface-variant tracking-widest uppercase mb-4 mt-6"
+                      >
+                        Tools Used
+                      </h4>
+
+                      <div id="toolList" class="flex flex-wrap gap-2">
+                        <span
+                          class="px-2 py-1 bg-surface-container border border-outline-variant/30 rounded font-code-sm text-xs text-on-surface"
+                        >
+                          None yet
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <!-- =========================================================
+           TERMINAL
+      ========================================================== -->
+
+      <div
+        class="fixed bottom-0 left-sidebar-width right-0 z-40 px-gutter pb-6 pointer-events-none flex flex-col items-end justify-end"
+      >
+        <button
+          id="terminal-toggle"
+          type="button"
+          class="pointer-events-auto mb-4 p-3 rounded-full shadow-md hover:-translate-y-1 transition-transform flex items-center justify-center border border-primary-container/20 bg-primary-container text-on-primary-container"
+          aria-label="Toggle agent activity log"
+        >
+          <span class="material-symbols-outlined"> terminal </span>
+        </button>
+
+        <div
+          id="terminal-window"
+          class="pointer-events-auto w-full max-w-3xl bg-inverse-surface text-inverse-on-surface rounded-t-lg rounded-bl-lg border border-outline/20 shadow-xl overflow-hidden flex flex-col h-64 transition-all duration-300 origin-bottom-right"
+        >
+          <!-- TERMINAL HEADER -->
+
+          <div
+            class="bg-primary-container px-4 py-2 flex items-center justify-between border-b border-white/10"
+          >
+            <div class="flex items-center gap-2">
+              <span
+                class="material-symbols-outlined text-on-primary-container/70 text-sm"
+              >
+                memory
+              </span>
+
+              <span
+                class="font-code-sm text-[11px] text-on-primary-container/70 tracking-widest uppercase"
+              >
+                Agent Activity Log
+              </span>
+            </div>
+
+            <div class="flex gap-1.5">
+              <div class="w-2.5 h-2.5 rounded-full bg-error"></div>
+
+              <div class="w-2.5 h-2.5 rounded-full bg-tertiary-container"></div>
+
+              <div class="w-2.5 h-2.5 rounded-full bg-primary-fixed"></div>
+            </div>
+          </div>
+
+          <!-- LOG -->
+
+          <div
+            id="log-container"
+            class="p-4 overflow-y-auto flex-1 font-code-sm text-[13px] leading-relaxed flex flex-col gap-1 text-inverse-on-surface/80"
+          >
+            <div class="flex gap-3">
+              <span class="text-inverse-on-surface/40"> [READY] </span>
+
+              <span class="text-primary-fixed"> INIT </span>
+
+              <span> Research AI is ready. </span>
+            </div>
+
+            <div class="flex gap-3">
+              <span class="text-inverse-on-surface/40"> [READY] </span>
+
+              <span class="text-tertiary-fixed-dim"> WAIT </span>
+
+              <span> Enter a topic to begin. </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =========================================================
+           SAVE BUTTON
+      ========================================================== -->
+
+      <footer class="fixed bottom-8 left-1/2 -translate-x-1/2 z-30">
+        <button
+          id="saveResearchBtn"
+          type="button"
+          disabled
+          class="bg-primary text-on-primary shadow-md disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-3 px-8 py-4 rounded-full font-label-caps text-label-caps uppercase tracking-widest hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-primary-container/20 group"
+        >
+          <span
+            class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110"
+          >
+            bookmark
+          </span>
+
+          <span> Save Research </span>
+        </button>
+      </footer>
+
+      <!-- =========================================================
+           JAVASCRIPT
+      ========================================================== -->
+
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          // ======================================================
+          // ELEMENTS
+          // ======================================================
+
+          const form = document.getElementById("researchForm");
+
+          const topic = document.getElementById("researchTopic");
+
+          const btn = document.getElementById("researchBtn");
+
+          const btnText = document.getElementById("btnText");
+
+          const loader = document.getElementById("btnLoader");
+
+          const title = document.getElementById("paperTitle");
+
+          const summary = document.getElementById("paperSummary");
+
+          const content = document.getElementById("paperContent");
+
+          const sources = document.getElementById("sourceList");
+
+          const tools = document.getElementById("toolList");
+
+          const logs = document.getElementById("log-container");
+
+          const status = document.getElementById("backendStatus");
+
+          const save = document.getElementById("saveResearchBtn");
+
+          const metricOne = document.getElementById("metricOne");
+
+          const metricOneText = document.getElementById("metricOneText");
+
+          const metricTwo = document.getElementById("metricTwo");
+
+          const metricTwoText = document.getElementById("metricTwoText");
+
+          const headerModel = document.getElementById("headerModel");
+
+          // ======================================================
+          // STORE LATEST RESEARCH
+          // ======================================================
+
+          let latest = null;
+
+          // ======================================================
+          // SAFE HTML ESCAPING
+          // ======================================================
+
+          const esc = (value) => {
+            return String(value ?? "")
+              .replaceAll("&", "&amp;")
+              .replaceAll("<", "&lt;")
+              .replaceAll(">", "&gt;")
+              .replaceAll('"', "&quot;")
+              .replaceAll("'", "&#039;");
+          };
+
+          // ======================================================
+          // SIMPLE MARKDOWN RENDERER
+          //
+          // The AI returns Markdown.
+          // We convert basic Markdown into HTML.
+          // ======================================================
+
+          const md = (value) => {
+            let text = esc(value || "").trim();
+
+            if (!text) {
+              return `
+                <p>
+                  No research content returned.
+                </p>
+              `;
+            }
+
+            // --------------------------------------------------
+            // Headings
+            // --------------------------------------------------
+
+            text = text.replace(
+              /^### (.+)$/gm,
+              '<h4 class="font-headline-lg text-headline-lg mt-7 mb-3">$1</h4>',
+            );
+
+            text = text.replace(
+              /^## (.+)$/gm,
+              '<h3 class="font-headline-lg text-headline-lg mt-8 mb-3">$1</h3>',
+            );
+
+            text = text.replace(
+              /^# (.+)$/gm,
+              '<h2 class="font-display-hero text-3xl mt-8 mb-4">$1</h2>',
+            );
+
+            // --------------------------------------------------
+            // Bold
+            // --------------------------------------------------
+
+            text = text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+            // --------------------------------------------------
+            // Italic
+            // --------------------------------------------------
+
+            text = text.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>");
+
+            // --------------------------------------------------
+            // Bullet points
+            // --------------------------------------------------
+
+            text = text.replace(
+              /^\s*[-*]\s+(.+)$/gm,
+              '<li class="ml-5 list-disc mb-2">$1</li>',
+            );
+
+            // --------------------------------------------------
+            // Numbered lists
+            // --------------------------------------------------
+
+            text = text.replace(
+              /^\s*\d+\.\s+(.+)$/gm,
+              '<li class="ml-5 list-decimal mb-2">$1</li>',
+            );
+
+            // --------------------------------------------------
+            // Split into blocks
+            // --------------------------------------------------
+
+            const blocks = text
+              .split(/\n{2,}/)
+              .map((block) => block.trim())
+              .filter(Boolean);
+
+            return blocks
+              .map((block) => {
+                // Don't wrap already generated headings/lists
+                // inside <p> tags.
+
+                if (
+                  block.startsWith("<h2") ||
+                  block.startsWith("<h3") ||
+                  block.startsWith("<h4") ||
+                  block.startsWith("<li")
+                ) {
+                  return block;
+                }
+
+                return `
+                  <p>
+                    ${block.replace(/\n/g, "<br>")}
+                  </p>
+                `;
+              })
+              .join("");
+          };
+
+          // ======================================================
+          // ACTIVITY LOG
+          // ======================================================
+
+          const log = (type, message, cls = "text-inverse-on-surface/80") => {
+            const row = document.createElement("div");
+
+            row.className = "flex gap-3";
+
+            row.innerHTML = `
+              <span class="text-inverse-on-surface/40">
+                [${new Date().toLocaleTimeString()}]
+              </span>
+
+              <span class="text-primary-fixed">
+                ${esc(type)}
+              </span>
+
+              <span class="${cls}">
+                ${esc(message)}
+              </span>
+            `;
+
+            logs.appendChild(row);
+
+            logs.scrollTop = logs.scrollHeight;
+          };
+
+          // ======================================================
+          // LOADING STATE
+          // ======================================================
+
+          const loading = (value) => {
+            btn.disabled = value;
+
+            topic.disabled = value;
+
+            if (value) {
+              btnText.classList.add("opacity-0");
+
+              loader.classList.remove("opacity-0");
+
+              loader.classList.add("opacity-100");
+            } else {
+              btnText.classList.remove("opacity-0");
+
+              loader.classList.remove("opacity-100");
+
+              loader.classList.add("opacity-0");
+
+              topic.disabled = false;
+            }
+          };
+
+          // ======================================================
+          // RENDER RESEARCH
+          //
+          // IMPORTANT:
+          //
+          // The backend now returns:
+          //
+          // research.content
+          //
+          // instead of:
+          //
+          // research.summary
+          //
+          // ======================================================
+
+          const renderResearch = (research) => {
+            latest = research;
+
+            // --------------------------------------------------
+            // Get values
+            // --------------------------------------------------
+
+            const paperTopic = research?.topic?.trim() || "Research Paper";
+
+            const paper = research?.content?.trim() || "";
+
+            const sourceItems = Array.isArray(research?.sources)
+              ? research.sources.filter(Boolean)
+              : [];
+
+            const toolItems = Array.isArray(research?.tools_used)
+              ? research.tools_used.filter(Boolean)
+              : [];
+
+            // --------------------------------------------------
+            // Title
+            // --------------------------------------------------
+
+            title.textContent = paperTopic;
+
+            // --------------------------------------------------
+            // Summary
+            // --------------------------------------------------
+
+            summary.textContent =
+              "Research generated by the local AI research agent using the available research tools.";
+
+            // --------------------------------------------------
+            // ACTUAL AI RESEARCH PAPER
+            // --------------------------------------------------
+
+            content.innerHTML = md(paper);
+
+            // --------------------------------------------------
+            // Sources
+            // --------------------------------------------------
+
+            sources.innerHTML = "";
+
+            if (sourceItems.length) {
+              sourceItems.forEach((source) => {
+                const element = document.createElement("span");
+
+                element.className =
+                  "px-2 py-1 bg-surface-container border border-outline-variant/30 rounded font-code-sm text-xs text-on-surface break-all";
+
+                element.textContent = source;
+
+                sources.appendChild(element);
+              });
+            } else {
+              sources.innerHTML = `
+                <span
+                  class="px-2 py-1 bg-surface-container border border-outline-variant/30 rounded font-code-sm text-xs"
+                >
+                  No URL sources returned
+                </span>
+              `;
+            }
+
+            // --------------------------------------------------
+            // Tools
+            // --------------------------------------------------
+
+            tools.innerHTML = "";
+
+            if (toolItems.length) {
+              toolItems.forEach((tool) => {
+                const element = document.createElement("span");
+
+                element.className =
+                  "px-2 py-1 bg-surface-container border border-outline-variant/30 rounded font-code-sm text-xs text-on-surface";
+
+                element.textContent = tool;
+
+                tools.appendChild(element);
+              });
+            } else {
+              tools.innerHTML = `
+                <span
+                  class="px-2 py-1 bg-surface-container border border-outline-variant/30 rounded font-code-sm text-xs"
+                >
+                  No tools reported
+                </span>
+              `;
+            }
+
+            // --------------------------------------------------
+            // Metrics
+            // --------------------------------------------------
+
+            metricOne.textContent = "DONE";
+
+            metricOneText.textContent = `${paper.length.toLocaleString()} characters generated.`;
+
+            metricTwo.textContent = String(sourceItems.length);
+
+            metricTwoText.textContent =
+              sourceItems.length === 1
+                ? "URL found in actual tool output."
+                : "URLs found in actual tool output.";
+
+            // --------------------------------------------------
+            // Enable Save
+            // --------------------------------------------------
+
+            save.disabled = false;
+
+            // --------------------------------------------------
+            // Scroll to research
+            // --------------------------------------------------
+
+            document.getElementById("research-card").scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          };
+
+          // ======================================================
+          // HEALTH CHECK
+          // ======================================================
+
+          fetch("/api/health", {
+            method: "GET",
+
+            headers: {
+              Accept: "application/json",
+            },
+          })
+            .then(async (response) => {
+              if (!response.ok) {
+                throw new Error("Backend health check failed.");
+              }
+
+              return response.json();
+            })
+
+            .then((data) => {
+              const model = data.model || "Ollama";
+
+              status.innerHTML = `
+                Local AI backend:
+                <span class="font-semibold text-primary">
+                  connected
+                </span>
+                · ${esc(model)}
+              `;
+
+              headerModel.textContent = model;
+
+              log(
+                "READY",
+                `Backend connected · ${model}`,
+                "text-primary-fixed",
+              );
+            })
+
+            .catch((error) => {
+              console.error(error);
+
+              status.innerHTML = `
+                <span class="font-semibold text-error">
+                  Local AI backend: not connected
+                </span>
+              `;
+
+              headerModel.textContent = "Backend offline";
+
+              log(
+                "ERROR",
+                "Cannot connect to Flask backend. Open http://127.0.0.1:5000",
+                "text-error",
+              );
+            });
+
+          // ======================================================
+          // RESEARCH REQUEST
+          // ======================================================
+
+          form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const query = topic.value.trim();
+
+            if (!query) {
+              topic.focus();
+
+              return;
+            }
+
+            latest = null;
+
+            save.disabled = true;
+
+            loading(true);
+
+            // ------------------------------------------------
+            // Temporary loading UI
+            // ------------------------------------------------
+
+            title.textContent = "Researching...";
+
+            summary.textContent =
+              "Your local research agent is searching, analyzing, and synthesizing information.";
+
+            content.innerHTML = `
+                <p class="animate-pulse">
+                  Research is in progress. Please wait...
+                </p>
+              `;
+
+            sources.innerHTML = `
+                <span
+                  class="px-2 py-1 bg-surface-container border border-outline-variant/30 rounded font-code-sm text-xs"
+                >
+                  Analyzing...
+                </span>
+              `;
+
+            tools.innerHTML = `
+                <span
+                  class="px-2 py-1 bg-surface-container border border-outline-variant/30 rounded font-code-sm text-xs"
+                >
+                  Running...
+                </span>
+              `;
+
+            metricOne.textContent = "...";
+
+            metricOneText.textContent = "Research agent is working.";
+
+            metricTwo.textContent = "...";
+
+            metricTwoText.textContent = "Waiting for tool results.";
+
+            // ------------------------------------------------
+            // Logs
+            // ------------------------------------------------
+
+            log("QUERY", query);
+
+            log("AGENT", "Starting research agent...");
+
+            try {
+              // ----------------------------------------------
+              // Send request to Flask
+              // ----------------------------------------------
+
+              const response = await fetch("/research", {
+                method: "POST",
+
+                headers: {
+                  "Content-Type": "application/json",
+
+                  Accept: "application/json",
+                },
+
+                body: JSON.stringify({
+                  topic: query,
+                }),
+              });
+
+              // ----------------------------------------------
+              // Parse response
+              // ----------------------------------------------
+
+              const data = await response.json().catch(() => null);
+
+              // ----------------------------------------------
+              // Error handling
+              // ----------------------------------------------
+
+              if (!response.ok || !data || !data.success) {
+                throw new Error(
+                  data?.error ||
+                    `Research request failed with HTTP ${response.status}.`,
+                );
+              }
+
+              // ----------------------------------------------
+              // IMPORTANT:
+              //
+              // New backend uses:
+              //
+              // data.research.content
+              //
+              // ----------------------------------------------
+
+              if (!data.research || !data.research.content) {
+                throw new Error(
+                  "Backend returned success but no research content.",
+                );
+              }
+
+              // ----------------------------------------------
+              // Success log
+              // ----------------------------------------------
+
+              log("SUCCESS", "Research completed.", "text-primary-fixed");
+
+              // ----------------------------------------------
+              // Show actual tools used
+              // ----------------------------------------------
+
+              if (Array.isArray(data.research.tools_used)) {
+                data.research.tools_used.forEach((toolName) => {
+                  log("TOOL", `Used ${toolName}`, "text-tertiary-fixed-dim");
+                });
+              }
+
+              // ----------------------------------------------
+              // Render research
+              // ----------------------------------------------
+
+              renderResearch(data.research);
+            } catch (error) {
+              console.error(error);
+
+              log(
+                "ERROR",
+                error.message || "Unable to complete research.",
+                "text-error",
+              );
+
+              title.textContent = "Research failed";
+
+              summary.textContent =
+                "The backend could not complete the research request.";
+
+              content.innerHTML = `
+                  <p class="text-error">
+                    ${esc(error.message || "Unknown error.")}
+                  </p>
+
+                  <p class="mt-4">
+                    Check the Flask terminal for the detailed error.
+                  </p>
+                `;
+
+              metricOne.textContent = "ERROR";
+
+              metricOneText.textContent = "Research did not complete.";
+
+              metricTwo.textContent = "—";
+
+              metricTwoText.textContent = "No research sources available.";
+
+              save.disabled = true;
+            } finally {
+              loading(false);
+            }
+          });
+
+          // ======================================================
+          // SAVE RESEARCH
+          // ======================================================
+
+          save.addEventListener("click", async () => {
+            if (!latest) {
+              return;
+            }
+
+            const original = save.innerHTML;
+
+            save.disabled = true;
+
+            save.innerHTML = `
+                <span class="material-symbols-outlined animate-spin">
+                  progress_activity
+                </span>
+
+                <span>
+                  Saving...
+                </span>
+              `;
+
+            try {
+              const response = await fetch("/save", {
+                method: "POST",
+
+                headers: {
+                  "Content-Type": "application/json",
+
+                  Accept: "application/json",
+                },
+
+                body: JSON.stringify({
+                  research: latest,
+                }),
+              });
+
+              const data = await response.json().catch(() => null);
+
+              if (!response.ok || !data || !data.success) {
+                throw new Error(
+                  data?.error ||
+                    `Save request failed with HTTP ${response.status}.`,
+                );
+              }
+
+              save.innerHTML = `
+                  <span class="material-symbols-outlined">
+                    check
+                  </span>
+
+                  <span>
+                    Saved
+                  </span>
+                `;
+
+              log(
+                "SAVE",
+                `Research saved to ${data.filename || "research_output.txt"}`,
+                "text-primary-fixed",
+              );
+
+              setTimeout(() => {
+                save.innerHTML = original;
+
+                save.disabled = false;
+              }, 1800);
+            } catch (error) {
+              console.error(error);
+
+              save.innerHTML = original;
+
+              save.disabled = false;
+
+              log(
+                "ERROR",
+                error.message || "Could not save research.",
+                "text-error",
+              );
+            }
+          });
+
+          // ======================================================
+          // TRENDING BUTTONS
+          // ======================================================
+
+          document.querySelectorAll(".trending-btn").forEach((button) => {
+            button.addEventListener("click", () => {
+              topic.value = button.textContent.trim();
+
+              topic.focus();
+            });
+          });
+
+          // ======================================================
+          // TERMINAL TOGGLE
+          // ======================================================
+
+          const toggle = document.getElementById("terminal-toggle");
+
+          const windowElement = document.getElementById("terminal-window");
+
+          let terminalOpen = true;
+
+          toggle.addEventListener("click", () => {
+            terminalOpen = !terminalOpen;
+
+            if (terminalOpen) {
+              windowElement.classList.remove(
+                "opacity-0",
+                "scale-95",
+                "translate-y-4",
+              );
+            } else {
+              windowElement.classList.add(
+                "opacity-0",
+                "scale-95",
+                "translate-y-4",
+              );
+            }
+          });
+
+          // ======================================================
+          // ENTER KEY
+          // ======================================================
+
+          topic.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault();
+
+              form.requestSubmit();
+            }
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>

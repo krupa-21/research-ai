@@ -1,0 +1,1164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <style>
+      @layer base {
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+        body {
+          overscroll-behavior: none;
+        }
+        main > :first-child {
+          margin-top: 0 !important;
+        }
+        main > :last-child {
+          margin-bottom: 0 !important;
+        }
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Geist:wght@400;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "primary-container": "#131b2e",
+              "on-surface-variant": "#45464d",
+              "inverse-surface": "#2d3133",
+              "surface-container-high": "#e6e8ea",
+              "on-primary-fixed": "#131b2e",
+              "secondary-fixed": "#d8e2ff",
+              "error-container": "#ffdad6",
+              "on-background": "#191c1e",
+              secondary: "#0058be",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed": "#d3e4fe",
+              "on-tertiary-fixed": "#0b1c30",
+              "on-secondary-fixed-variant": "#004395",
+              "surface-container-highest": "#e0e3e5",
+              "inverse-on-surface": "#eff1f3",
+              "on-tertiary-fixed-variant": "#38485d",
+              "on-secondary": "#ffffff",
+              "tertiary-container": "#0b1c30",
+              "on-secondary-container": "#fefcff",
+              "surface-variant": "#e0e3e5",
+              "tertiary-fixed-dim": "#b7c8e1",
+              "on-tertiary": "#ffffff",
+              "outline-variant": "#c6c6cd",
+              "on-primary-container": "#7c839b",
+              "surface-container-low": "#f2f4f6",
+              "surface-bright": "#f7f9fb",
+              "surface-dim": "#d8dadc",
+              "secondary-fixed-dim": "#adc6ff",
+              "secondary-container": "#2170e4",
+              background: "#f7f9fb",
+              "on-error-container": "#93000a",
+              "on-secondary-fixed": "#001a42",
+              "primary-fixed-dim": "#bec6e0",
+              primary: "#000000",
+              "primary-fixed": "#dae2fd",
+              "surface-tint": "#565e74",
+              error: "#ba1a1a",
+              tertiary: "#000000",
+              outline: "#76777d",
+              "on-primary-fixed-variant": "#3f465c",
+              surface: "#f7f9fb",
+              "inverse-primary": "#bec6e0",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "on-surface": "#191c1e",
+              "on-tertiary-container": "#75859d",
+              "surface-container": "#eceef0",
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+            spacing: {
+              "margin-desktop": "48px",
+              "container-max-width": "1280px",
+              unit: "4px",
+              "margin-mobile": "16px",
+              gutter: "24px",
+            },
+            fontFamily: {
+              "display-lg": ["Merriweather"],
+              "headline-md": ["Geist"],
+              "serif-content": ["Merriweather"],
+              "label-caps": ["Geist"],
+              "display-md": ["Merriweather"],
+              "headline-lg": ["Geist"],
+              "body-md": ["Geist"],
+              "body-lg": ["Geist"],
+            },
+            fontSize: {
+              "display-lg": [
+                "40px",
+                {
+                  lineHeight: "52px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "700",
+                },
+              ],
+              "headline-md": [
+                "20px",
+                { lineHeight: "28px", fontWeight: "600" },
+              ],
+              "serif-content": [
+                "17px",
+                {
+                  lineHeight: "1.75",
+                  letterSpacing: "0.01em",
+                  fontWeight: "400",
+                },
+              ],
+              "label-caps": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                },
+              ],
+              "display-md": ["32px", { lineHeight: "42px", fontWeight: "700" }],
+              "headline-lg": [
+                "24px",
+                {
+                  lineHeight: "32px",
+                  letterSpacing: "-0.01em",
+                  fontWeight: "600",
+                },
+              ],
+              "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+              "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-background font-body-md text-on-surface">
+    <header
+      class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"
+    >
+      <div
+        class="h-16 max-w-[1280px] mx-auto px-margin-desktop flex items-center justify-between"
+      >
+        <div class="flex items-center gap-unit">
+          <img
+            alt="Research AI Logo"
+            class="h-8 w-auto object-contain"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1eXJxr5TCSFOgNYszJJPJ_l0qBETi_hba8Z0Q0DBBmrWLfznA8sNKFNC5RTI_vJGsoiLLtiPqrKuL8WtYIJhrUGKwzYPIOJVDv3FhWd-P1DS7wzRz_cXyxGxRUhucRr-8E7NXrdoj7UBiICxqKgGjXmuIYeSnVtzE-hpepNxtdHBEFI8VFdF9MT8aCcI6Amptk2j2hURnjpaKRFBYvYc3991WDs2TnThAQmkcMEc6kWQMKiYlT4qxFg"
+          /><span class="font-headline-md text-headline-md text-primary ml-2"
+            >Research AI</span
+          >
+        </div>
+        <nav
+          class="hidden md:flex items-center gap-gutter"
+          data-active-classes="text-primary font-semibold"
+        >
+          <a
+            aria-current="page"
+            class="transition-colors text-primary font-semibold"
+            data-path="home"
+            href="#"
+            >Home</a
+          ><a
+            class="text-body-md text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="my-research"
+            href="#"
+            >My Research</a
+          ><a
+            class="text-body-md text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="documentation"
+            href="/docs"
+            >Documentation</a
+          ><a
+            class="text-body-md text-on-surface-variant hover:text-on-surface transition-colors"
+            data-path="api-access"
+            href="/api"
+            >API Access</a
+          >
+        </nav>
+        <div class="flex items-center gap-gutter">
+          <a
+            class="text-body-md font-semibold text-on-surface hover:text-primary transition-colors"
+            data-path="sign-in"
+            href="#"
+            >Sign In</a
+          >
+          <div
+            class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"
+          >
+            <span class="material-symbols-outlined text-on-primary text-[18px]"
+              >person</span
+            >
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="w-full pt-16 min-h-screen bg-background">
+      <div class="flex flex-col w-full font-body-lg text-on-surface">
+        <!-- Hero Section -->
+        <section
+          class="relative pt-24 pb-32 px-margin-mobile md:px-margin-desktop overflow-hidden bg-surface"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-primary-fixed/30 via-surface to-secondary-fixed/20 -z-10 mix-blend-multiply"
+          ></div>
+          <div
+            class="absolute -top-[20%] -left-[10%] w-[50%] h-[60%] rounded-full bg-primary-fixed-dim/20 blur-[120px] -z-10 pointer-events-none"
+          ></div>
+          <div
+            class="max-w-container-max-width mx-auto flex flex-col items-center text-center"
+          >
+            <span
+              class="text-label-caps tracking-widest uppercase text-secondary-container mb-6 inline-block py-1 px-3 rounded-full bg-secondary-fixed shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05)]"
+              >Introducing Alpha Release</span
+            >
+            <h1
+              class="text-display-lg md:text-[64px] md:leading-[72px] font-display-lg text-on-surface mb-8 max-w-[900px] tracking-tight"
+            >
+              Transform Queries into <br /><span
+                class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary"
+                >Professional Research Papers.</span
+              >
+            </h1>
+            <p
+              class="text-headline-md font-serif-content text-on-surface-variant max-w-[800px] mb-12"
+            >
+              An intelligent agent powered by LangChain and Qwen2.5 that
+              researches, analyzes, and synthesizes information into structured
+              academic documents.
+            </p>
+            <!-- Query Input Form -->
+            <form
+              action="/research"
+              class="w-full max-w-[720px] relative group shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl bg-surface-container-lowest transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+              id="researchForm"
+              method="POST"
+            >
+              <div
+                class="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/20 to-secondary/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity -z-10"
+              ></div>
+              <div
+                class="flex items-center p-2 rounded-2xl bg-surface-container-lowest focus-within:ring-2 focus-within:ring-primary transition-shadow"
+              >
+                <span
+                  class="material-symbols-outlined text-on-surface-variant px-4"
+                  >search</span
+                >
+                <input
+                  class="flex-1 bg-transparent border-none focus:outline-none text-body-lg text-on-surface placeholder:text-on-surface-variant/50 font-body-md py-4"
+                  id="researchTopic"
+                  name="topic"
+                  placeholder="Enter your research topic..."
+                  required=""
+                  type="text"
+                />
+                <button
+                  class="relative overflow-hidden bg-primary text-on-primary px-6 py-2 rounded-lg ..."
+                  id="researchBtn"
+                  type="submit"
+                >
+                  <span
+                    class="flex items-center gap-2 transition-transform duration-300"
+                    id="btnText"
+                  >
+                    Research
+                    <span class="material-symbols-outlined text-[20px]"
+                      >auto_awesome</span
+                    >
+                  </span>
+                  <div
+                    class="absolute inset-0 flex items-center justify-center bg-primary translate-y-[100%] transition-transform duration-300"
+                    id="btnLoader"
+                  >
+                    <span class="material-symbols-outlined animate-spin"
+                      >progress_activity</span
+                    >
+                  </div>
+                </button>
+              </div>
+            </form>
+            <p
+              id="backendStatus"
+              class="mt-4 text-sm text-on-surface-variant/70"
+            >
+              Local AI backend: <span class="font-semibold">ready</span>
+            </p>
+
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                const form = document.getElementById("researchForm");
+                const topicInput = document.getElementById("researchTopic");
+                const button = document.getElementById("researchBtn");
+                const btnText = document.getElementById("btnText");
+                const btnLoader = document.getElementById("btnLoader");
+
+                const workbench = document.getElementById("workbenchSection");
+                const logs = document.getElementById("agentLogs");
+                const generatedPaper =
+                  document.getElementById("generatedPaper");
+                const saveButton = document.getElementById("saveResearchBtn");
+
+                let latestResearch = null;
+
+                function setLoading(isLoading) {
+                  button.disabled = isLoading;
+                  topicInput.disabled = isLoading;
+
+                  if (isLoading) {
+                    btnText.style.transform = "translateY(-150%)";
+                    btnLoader.style.transform = "translateY(0)";
+                    button.classList.add("opacity-80", "cursor-wait");
+                  } else {
+                    btnText.style.transform = "translateY(0)";
+                    btnLoader.style.transform = "translateY(100%)";
+                    button.classList.remove("opacity-80", "cursor-wait");
+                    topicInput.disabled = false;
+                  }
+                }
+
+                function escapeHtml(value) {
+                  return String(value ?? "")
+                    .replaceAll("&", "&amp;")
+                    .replaceAll("<", "&lt;")
+                    .replaceAll(">", "&gt;")
+                    .replaceAll('"', "&quot;")
+                    .replaceAll("'", "&#039;");
+                }
+
+                function markdownToHtml(markdown) {
+                  let text = escapeHtml(markdown || "");
+
+                  // Basic Markdown support for the generated paper.
+                  text = text.replace(
+                    /^### (.+)$/gm,
+                    '<h6 class="text-headline-md font-headline-md text-on-surface mt-6 mb-2">$1</h6>',
+                  );
+                  text = text.replace(
+                    /^## (.+)$/gm,
+                    '<h5 class="text-label-caps uppercase text-secondary font-bold mb-2 mt-8 tracking-widest">$1</h5>',
+                  );
+                  text = text.replace(
+                    /^# (.+)$/gm,
+                    '<h4 class="font-display-md text-headline-md text-on-surface mt-6 mb-4">$1</h4>',
+                  );
+                  text = text.replace(
+                    /^\s*[-*] (.+)$/gm,
+                    '<li class="ml-5 list-disc">$1</li>',
+                  );
+                  text = text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+                  text = text.replace(/\*(.+?)\*/g, "<em>$1</em>");
+                  text = text.replace(/\n{2,}/g, "</p><p>");
+                  text = text.replace(/\n/g, "<br>");
+
+                  return `<p>${text}</p>`;
+                }
+
+                function renderLogs(topic, result) {
+                  const sourceLines = (result.sources || [])
+                    .map(
+                      (source) =>
+                        `<p class="text-secondary-fixed-dim">Source: ${escapeHtml(source)}</p>`,
+                    )
+                    .join("");
+
+                  const toolLines = (result.tools_used || [])
+                    .map(
+                      (tool) =>
+                        `<p class="text-tertiary-fixed">Tool: ${escapeHtml(tool)}</p>`,
+                    )
+                    .join("");
+
+                  logs.innerHTML = `
+                  <p class="text-secondary-fixed-dim">&gt; Starting research...</p>
+                  <p class="text-on-surface-variant/80">Query: ${escapeHtml(topic)}</p>
+                  <p class="text-tertiary-fixed">Action: research_agent</p>
+                  <p class="text-secondary-fixed-dim">Observation: Gathering information and synthesizing findings...</p>
+                  ${toolLines}
+                  ${sourceLines}
+                  <p class="text-secondary-fixed-dim">&gt; Research completed successfully.</p>
+                `;
+                }
+
+                function renderPaper(result) {
+                  const sources = (result.sources || []).length
+                    ? result.sources
+                        .map((source) => `<li>${escapeHtml(source)}</li>`)
+                        .join("")
+                    : "<li>No source list returned by the agent.</li>";
+
+                  const tools = (result.tools_used || []).length
+                    ? result.tools_used
+                        .map(
+                          (tool) =>
+                            `<span class="bg-surface-container-high px-2 py-1 rounded text-[12px] font-mono">${escapeHtml(tool)}</span>`,
+                        )
+                        .join("")
+                    : '<span class="bg-surface-container-high px-2 py-1 rounded text-[12px] font-mono">No tools reported</span>';
+
+                  generatedPaper.innerHTML = `
+                  <h4 class="font-display-md text-headline-md text-on-surface mb-6">
+                    ${escapeHtml(result.topic || "Research Paper")}
+                  </h4>
+
+                  <div class="space-y-6">
+                    <section>
+                      <h5 class="text-label-caps uppercase text-secondary font-bold mb-2 tracking-widest">
+                        Research Paper
+                      </h5>
+                      <div class="text-serif-content text-on-surface-variant text-[15px] leading-relaxed">
+                        ${markdownToHtml(result.summary || "No research content was returned.")}
+                      </div>
+                    </section>
+
+                    <section>
+                      <h5 class="text-label-caps uppercase text-secondary font-bold mb-2 tracking-widest">
+                        Sources
+                      </h5>
+                      <ul class="list-disc pl-5 text-serif-content text-on-surface-variant text-[14px] leading-relaxed space-y-2">
+                        ${sources}
+                      </ul>
+                    </section>
+
+                    <section>
+                      <h5 class="text-label-caps uppercase text-secondary font-bold mb-2 tracking-widest">
+                        Tools Used
+                      </h5>
+                      <div class="flex flex-wrap gap-2 mt-2">
+                        ${tools}
+                      </div>
+                    </section>
+                  </div>
+                `;
+                }
+
+                function showError(message) {
+                  logs.innerHTML = `
+                  <p class="text-red-300">&gt; Research failed.</p>
+                  <p class="text-red-200">${escapeHtml(message)}</p>
+                `;
+
+                  generatedPaper.innerHTML = `
+                  <div class="h-full flex flex-col items-center justify-center text-center">
+                    <span class="material-symbols-outlined text-error text-5xl mb-4">
+                      error
+                    </span>
+                    <h4 class="font-headline-lg text-on-surface text-xl mb-2">
+                      Research could not be completed
+                    </h4>
+                    <p class="text-on-surface-variant max-w-md">
+                      ${escapeHtml(message)}
+                    </p>
+                  </div>
+                `;
+                }
+
+                form.addEventListener("submit", async function (event) {
+                  event.preventDefault();
+
+                  const topic = topicInput.value.trim();
+                  if (!topic) return;
+
+                  setLoading(true);
+
+                  logs.innerHTML = `
+                  <p class="text-secondary-fixed-dim">&gt; Connecting to Research AI...</p>
+                  <p class="text-on-surface-variant/80">Query: ${escapeHtml(topic)}</p>
+                  <p class="text-tertiary-fixed">Action: starting agent...</p>
+                `;
+
+                  workbench.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+
+                  try {
+                    const response = await fetch("/research", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ topic }),
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                      throw new Error(
+                        data.error || "The research request failed.",
+                      );
+                    }
+
+                    latestResearch = data.research;
+
+                    renderLogs(topic, latestResearch);
+                    renderPaper(latestResearch);
+                  } catch (error) {
+                    showError(
+                      error.message || "Unable to connect to the backend.",
+                    );
+                  } finally {
+                    setLoading(false);
+                  }
+                });
+
+                saveButton.addEventListener("click", async function () {
+                  if (!latestResearch) {
+                    alert("Run a research query first.");
+                    return;
+                  }
+
+                  const original = saveButton.innerHTML;
+                  saveButton.disabled = true;
+                  saveButton.innerHTML = `
+                  <span class="material-symbols-outlined text-[18px] animate-spin">
+                    progress_activity
+                  </span>
+                  Saving...
+                `;
+
+                  try {
+                    const response = await fetch("/save", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ research: latestResearch }),
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                      throw new Error(
+                        data.error || "Could not save the research.",
+                      );
+                    }
+
+                    saveButton.innerHTML = `
+                    <span class="material-symbols-outlined text-[18px]">
+                      check
+                    </span>
+                    Saved
+                  `;
+
+                    setTimeout(() => {
+                      saveButton.innerHTML = original;
+                      saveButton.disabled = false;
+                    }, 1800);
+                  } catch (error) {
+                    saveButton.innerHTML = original;
+                    saveButton.disabled = false;
+                    alert(error.message || "Could not save the research.");
+                  }
+                });
+              });
+            </script>
+            <div
+              class="mt-8 flex items-center gap-4 text-body-md text-on-surface-variant"
+            >
+              <span class="flex items-center gap-1"
+                ><span
+                  class="material-symbols-outlined text-[16px] text-secondary"
+                  >check_circle</span
+                >
+                Automated Synthesis</span
+              >
+              <span class="flex items-center gap-1"
+                ><span
+                  class="material-symbols-outlined text-[16px] text-secondary"
+                  >check_circle</span
+                >
+                Structured Formatting</span
+              >
+              <span class="flex items-center gap-1"
+                ><span
+                  class="material-symbols-outlined text-[16px] text-secondary"
+                  >check_circle</span
+                >
+                Direct Export</span
+              >
+            </div>
+          </div>
+        </section>
+        <!-- Features Bento Grid -->
+        <section
+          class="py-24 px-margin-mobile md:px-margin-desktop bg-surface-container-low"
+        >
+          <div class="max-w-container-max-width mx-auto">
+            <div
+              class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8"
+            >
+              <div>
+                <h2
+                  class="text-display-md font-display-md text-on-surface mb-4"
+                >
+                  Engineered for Precision
+                </h2>
+                <p
+                  class="text-serif-content text-on-surface-variant max-w-[600px]"
+                >
+                  Our architecture combines advanced language models with
+                  dynamic tool utilization to deliver verifiable, structured
+                  insights.
+                </p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+              <!-- Feature 1: Large Left -->
+              <div
+                class="md:col-span-7 bg-surface-container-lowest rounded-[24px] p-8 md:p-12 shadow-sm flex flex-col justify-between group overflow-hidden relative"
+              >
+                <div
+                  class="absolute top-0 right-0 w-64 h-64 bg-primary-fixed/40 rounded-full blur-[80px] -z-10 group-hover:scale-110 transition-transform duration-700"
+                ></div>
+                <div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center mb-6"
+                  >
+                    <span class="material-symbols-outlined text-[24px]"
+                      >travel_explore</span
+                    >
+                  </div>
+                  <h3
+                    class="text-headline-lg font-headline-lg text-on-surface mb-3"
+                  >
+                    Multi-Tool Search
+                  </h3>
+                  <p class="text-body-lg text-on-surface-variant max-w-md">
+                    Leverages Wikipedia and dedicated Search tools concurrently
+                    for comprehensive data gathering across disparate sources.
+                  </p>
+                </div>
+                <div
+                  class="mt-12 h-[200px] w-full rounded-xl bg-surface flex items-center justify-center overflow-hidden relative shadow-[inset_0_2px_10px_rgba(0,0,0,0.02)]"
+                >
+                  <div
+                    class="flex items-center justify-center gap-4 w-full px-8 absolute inset-0"
+                  >
+                    <!-- Animated data flow visualization -->
+                    <div
+                      class="flex-1 h-[2px] bg-outline-variant relative overflow-hidden"
+                    >
+                      <div
+                        class="absolute inset-y-0 left-0 w-1/3 bg-primary animate-[translateRight_2s_infinite]"
+                      ></div>
+                    </div>
+                    <div
+                      class="w-16 h-16 rounded-2xl bg-surface-container-lowest shadow-md flex items-center justify-center flex-shrink-0 z-10 text-primary"
+                    >
+                      <span class="material-symbols-outlined text-[32px]"
+                        >database</span
+                      >
+                    </div>
+                    <div
+                      class="flex-1 h-[2px] bg-outline-variant relative overflow-hidden"
+                    >
+                      <div
+                        class="absolute inset-y-0 left-0 w-1/3 bg-primary animate-[translateRight_2s_infinite_0.5s]"
+                      ></div>
+                    </div>
+                    <div
+                      class="w-16 h-16 rounded-2xl bg-surface-container-lowest shadow-md flex items-center justify-center flex-shrink-0 z-10 text-secondary"
+                    >
+                      <span class="material-symbols-outlined text-[32px]"
+                        >public</span
+                      >
+                    </div>
+                  </div>
+                  <style>
+                    @keyframes translateRight {
+                      0% {
+                        transform: translateX(-100%);
+                      }
+                      100% {
+                        transform: translateX(300%);
+                      }
+                    }
+                  </style>
+                </div>
+              </div>
+              <!-- Feature 2: Small Right Top -->
+              <div
+                class="md:col-span-5 bg-surface-container-lowest rounded-[24px] p-8 shadow-sm flex flex-col justify-between"
+              >
+                <div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center mb-6"
+                  >
+                    <span class="material-symbols-outlined text-[24px]"
+                      >auto_fix_high</span
+                    >
+                  </div>
+                  <h3
+                    class="text-headline-lg font-headline-lg text-on-surface mb-3"
+                  >
+                    Automated Synthesis
+                  </h3>
+                  <p class="text-body-lg text-on-surface-variant">
+                    Processes raw tool outputs into coherent, structured papers,
+                    eliminating hours of manual formatting.
+                  </p>
+                </div>
+              </div>
+              <!-- Feature 3: Small Left Bottom -->
+              <div
+                class="md:col-span-5 bg-surface-container-lowest rounded-[24px] p-8 shadow-sm flex flex-col justify-between"
+              >
+                <div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center mb-6"
+                  >
+                    <span class="material-symbols-outlined text-[24px]"
+                      >article</span
+                    >
+                  </div>
+                  <h3
+                    class="text-headline-lg font-headline-lg text-on-surface mb-3"
+                  >
+                    Professional Formatting
+                  </h3>
+                  <p class="text-body-lg text-on-surface-variant">
+                    Automatically organizes content into Introduction,
+                    Discussion, Findings, and Conclusions.
+                  </p>
+                </div>
+              </div>
+              <!-- Feature 4: Large Right Bottom -->
+              <div
+                class="md:col-span-7 bg-primary text-on-primary rounded-[24px] p-8 shadow-sm flex flex-col justify-between relative overflow-hidden group"
+              >
+                <div
+                  class="absolute -bottom-[20%] -right-[10%] w-[300px] h-[300px] rounded-full bg-primary-fixed-dim/20 blur-[60px] pointer-events-none group-hover:scale-125 transition-transform duration-700"
+                ></div>
+                <div>
+                  <div
+                    class="w-12 h-12 rounded-full bg-on-primary/10 flex items-center justify-center mb-6"
+                  >
+                    <span class="material-symbols-outlined text-[24px]"
+                      >save_alt</span
+                    >
+                  </div>
+                  <h3 class="text-headline-lg font-headline-lg mb-3">
+                    Direct Export
+                  </h3>
+                  <p class="text-body-lg text-on-primary/80 max-w-md mb-8">
+                    Save your research directly to structured text files for
+                    immediate use in your workflow.
+                  </p>
+                </div>
+                <div
+                  class="bg-surface-container-lowest/10 backdrop-blur-sm rounded-xl p-4 font-mono text-[14px] text-on-primary/90 border border-on-primary/10"
+                >
+                  <div
+                    class="flex items-center gap-2 mb-2 pb-2 border-b border-on-primary/20"
+                  >
+                    <span class="w-3 h-3 rounded-full bg-error/80"></span>
+                    <span class="w-3 h-3 rounded-full bg-secondary/80"></span>
+                    <span
+                      class="w-3 h-3 rounded-full bg-tertiary-fixed/80"
+                    ></span>
+                    <span class="ml-2 text-on-primary/60 text-[12px]"
+                      >export_script.py</span
+                    >
+                  </div>
+                  <p class="">
+                    <span class="text-tertiary-fixed">with</span> open(<span
+                      class="text-secondary-fixed"
+                      >"research_output.txt"</span
+                    >, <span class="text-secondary-fixed">"w"</span>)
+                    <span class="text-tertiary-fixed">as</span> file:
+                  </p>
+                  <p class="pl-4">file.write(structured_paper)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Live Research Workbench Section -->
+        <section
+          class="py-32 px-margin-mobile md:px-margin-desktop bg-surface relative overflow-hidden"
+          id="workbenchSection"
+        >
+          <div class="max-w-container-max-width mx-auto">
+            <div class="text-center mb-20 relative z-10">
+              <h2 class="text-display-md font-display-md text-on-surface mb-4">
+                Live Research Workbench
+              </h2>
+              <p
+                class="text-serif-content text-on-surface-variant max-w-[600px] mx-auto"
+              >
+                Watch the agent gather information and synthesize it into a
+                structured document in real-time.
+              </p>
+            </div>
+            <div
+              class="flex flex-col lg:flex-row gap-gutter bg-surface-container rounded-[32px] p-2 md:p-6 shadow-xl relative z-10 h-[600px]"
+            >
+              <!-- Left Panel: Agent Logs -->
+              <div
+                class="flex-1 bg-inverse-surface text-inverse-on-surface rounded-[24px] p-6 md:p-8 overflow-hidden shadow-sm flex flex-col"
+              >
+                <div
+                  class="flex items-center justify-between mb-6 pb-4 border-b border-outline/30"
+                >
+                  <div class="flex items-center gap-3">
+                    <span
+                      class="material-symbols-outlined text-[20px] text-primary-fixed"
+                      >terminal</span
+                    >
+                    <span class="font-headline-md text-[16px] tracking-wide"
+                      >Agent Logs</span
+                    >
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="relative flex h-3 w-3">
+                      <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary-fixed opacity-75"
+                      ></span>
+                      <span
+                        class="relative inline-flex rounded-full h-3 w-3 bg-secondary-fixed"
+                      ></span>
+                    </span>
+                    <span
+                      class="text-label-caps text-outline bg-surface-tint/20 px-2 py-1 rounded"
+                      >PROCESSING</span
+                    >
+                  </div>
+                </div>
+                <div
+                  id="agentLogs"
+                  class="font-mono text-[13px] leading-relaxed overflow-y-auto flex-1 space-y-2 text-outline-variant/80"
+                >
+                  <p class="text-secondary-fixed-dim">
+                    &gt; Entering new AgentExecutor chain...
+                  </p>
+                  <p class="text-on-surface-variant/80">
+                    Thought: I need to find recent information on AI's impact on
+                    climate change mitigation strategies.
+                  </p>
+                  <p class="text-tertiary-fixed">Action: wikipedia_tool</p>
+                  <p class="text-tertiary-fixed">
+                    Action Input: "Artificial Intelligence and climate change
+                    mitigation"
+                  </p>
+                  <p class="text-secondary-fixed-dim">
+                    Observation: AI is being used to optimize renewable energy
+                    grids and improve weather forecasting accuracy...
+                  </p>
+                  <p class="text-on-surface-variant/80">
+                    Thought: I should supplement this with recent news and
+                    specific data points from web search.
+                  </p>
+                  <p class="text-tertiary-fixed">Action: search_tool</p>
+                  <p class="text-tertiary-fixed">
+                    Action Input: "AI climate change impact recent findings 2024
+                    data center efficiency"
+                  </p>
+                  <p class="text-secondary-fixed-dim">
+                    Observation: Recent studies show AI improving grid
+                    efficiency by 20% and reducing cooling costs by 40%...
+                  </p>
+                  <p class="text-on-surface-variant/80">
+                    Thought: I have sufficient data to synthesize the final
+                    research paper.
+                  </p>
+                  <p class="text-secondary-fixed-dim">&gt; Finished chain.</p>
+                </div>
+              </div>
+              <!-- Right Panel: Generated Output -->
+              <div
+                class="flex-1 bg-surface-container-lowest rounded-[24px] p-8 md:p-10 shadow-sm flex flex-col relative overflow-hidden"
+              >
+                <div
+                  class="flex items-center justify-between mb-8 relative z-10 border-b border-outline-variant/30 pb-4"
+                >
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center"
+                    >
+                      <span class="material-symbols-outlined text-[16px]"
+                        >article</span
+                      >
+                    </span>
+                    <span
+                      class="text-label-caps uppercase tracking-widest text-on-surface-variant"
+                      >Generated Paper</span
+                    >
+                  </div>
+                  <button
+                    id="saveResearchBtn"
+                    class="bg-primary text-on-primary px-6 py-2 rounded-lg font-headline-md text-[14px] hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-md"
+                  >
+                    <span class="material-symbols-outlined text-[18px]"
+                      >download</span
+                    >
+                    Save to File
+                  </button>
+                </div>
+                <div
+                  id="generatedPaper"
+                  class="flex-1 relative z-10 overflow-y-auto pr-4"
+                >
+                  <h4
+                    class="font-display-md text-headline-md text-on-surface mb-6"
+                  >
+                    The Impact of Artificial Intelligence on Climate Change
+                    Mitigation
+                  </h4>
+                  <div class="space-y-6">
+                    <section>
+                      <h5
+                        class="text-label-caps uppercase text-secondary font-bold mb-2 tracking-widest"
+                      >
+                        Introduction
+                      </h5>
+                      <p
+                        class="text-serif-content text-on-surface-variant text-[15px] leading-relaxed"
+                      >
+                        Artificial Intelligence (AI) is increasingly recognized
+                        as a pivotal tool in addressing global climate change
+                        challenges. This paper synthesizes recent findings on AI
+                        applications in optimizing renewable energy grids and
+                        predicting environmental anomalies.
+                      </p>
+                    </section>
+                    <section>
+                      <h5
+                        class="text-label-caps uppercase text-secondary font-bold mb-2 tracking-widest"
+                      >
+                        Main Discussion
+                      </h5>
+                      <p
+                        class="text-serif-content text-on-surface-variant text-[15px] leading-relaxed"
+                      >
+                        The deployment of machine learning models allows for
+                        real-time analysis of complex climate data. By
+                        processing petabytes of satellite imagery and sensor
+                        data, AI identifies patterns in deforestation and ocean
+                        temperature shifts that were previously undetectable by
+                        traditional methods.
+                      </p>
+                    </section>
+                    <section>
+                      <h5
+                        class="text-label-caps uppercase text-secondary font-bold mb-2 tracking-widest"
+                      >
+                        Important Findings
+                      </h5>
+                      <ul
+                        class="list-disc pl-5 text-serif-content text-on-surface-variant text-[15px] leading-relaxed space-y-2"
+                      >
+                        <li class="">
+                          AI models improve weather forecasting accuracy by 25%,
+                          directly impacting solar and wind energy generation
+                          planning.
+                        </li>
+                        <li class="">
+                          Machine learning algorithms significantly reduce data
+                          center energy consumption through predictive cooling
+                          mechanisms.
+                        </li>
+                        <li class="">
+                          Smart grid optimization using AI reduces overall
+                          carbon emissions by up to 15% in urban environments.
+                        </li>
+                      </ul>
+                    </section>
+                    <section>
+                      <h5
+                        class="text-label-caps uppercase text-secondary font-bold mb-2 tracking-widest"
+                      >
+                        Sources
+                      </h5>
+                      <ul
+                        class="list-disc pl-5 text-serif-content text-on-surface-variant text-[14px] leading-relaxed"
+                      >
+                        <li class="">
+                          Wikipedia: Climate Change Mitigation &amp; AI
+                        </li>
+                        <li class="">
+                          Web Search: 2024 Global Energy Efficiency Report
+                        </li>
+                      </ul>
+                    </section>
+                    <section>
+                      <h5
+                        class="text-label-caps uppercase text-secondary font-bold mb-2 tracking-widest"
+                      >
+                        Tools Used
+                      </h5>
+                      <div class="flex gap-2 mt-2">
+                        <span
+                          class="bg-surface-container-high px-2 py-1 rounded text-[12px] font-mono"
+                          >wikipedia_tool</span
+                        ><span
+                          class="bg-surface-container-high px-2 py-1 rounded text-[12px] font-mono"
+                          >search_tool</span
+                        >
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- CTA Section -->
+        <section
+          class="py-32 px-margin-mobile md:px-margin-desktop bg-primary text-on-primary relative overflow-hidden"
+        >
+          <div class="absolute inset-0 z-0">
+            <div
+              class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-fixed/20 via-primary to-primary"
+            ></div>
+          </div>
+          <div
+            class="max-w-[800px] mx-auto text-center relative z-10 flex flex-col items-center"
+          >
+            <h2 class="text-display-lg font-display-lg mb-6">
+              Start your first research project today.
+            </h2>
+            <p
+              class="text-headline-md font-serif-content text-on-primary/80 mb-12"
+            >
+              Experience the power of automated, structured academic synthesis.
+            </p>
+            <button
+              class="bg-surface-container-lowest text-primary px-10 py-4 rounded-full font-headline-md text-[18px] hover:bg-surface transition-colors flex items-center gap-3 shadow-[0_8px_30px_rgba(255,255,255,0.15)] group"
+              onclick="
+                document.getElementById('researchTopic').focus();
+                document
+                  .getElementById('researchTopic')
+                  .scrollIntoView({ behavior: 'smooth' });
+              "
+            >
+              Initialize Agent
+              <span
+                class="material-symbols-outlined text-[24px] group-hover:translate-x-1 transition-transform"
+                >arrow_forward</span
+              >
+            </button>
+            <div
+              class="mt-16 flex flex-wrap justify-center gap-8 text-label-caps text-on-primary/60 uppercase tracking-widest"
+            >
+              <span class="flex items-center gap-2"
+                ><span class="material-symbols-outlined text-[16px]"
+                  >integration_instructions</span
+                >
+                Powered by LangChain</span
+              >
+              <span class="flex items-center gap-2"
+                ><span class="material-symbols-outlined text-[16px]"
+                  >memory</span
+                >
+                Ollama Integration</span
+              >
+              <span class="flex items-center gap-2"
+                ><span class="material-symbols-outlined text-[16px]"
+                  >fact_check</span
+                >
+                Objective &amp; Accurate</span
+              >
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer
+      class="w-full bg-surface-container py-12 border-t border-outline-variant/20"
+    >
+      <div class="max-w-[1280px] mx-auto px-margin-desktop">
+        <div
+          class="flex flex-col md:flex-row justify-between items-center gap-gutter text-on-surface-variant"
+        >
+          <div class="flex items-center gap-unit">
+            <img
+              alt="Research AI Logo"
+              class="h-6 w-auto grayscale opacity-50"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1eXJxr5TCSFOgNYszJJPJ_l0qBETi_hba8Z0Q0DBBmrWLfznA8sNKFNC5RTI_vJGsoiLLtiPqrKuL8WtYIJhrUGKwzYPIOJVDv3FhWd-P1DS7wzRz_cXyxGxRUhucRr-8E7NXrdoj7UBiICxqKgGjXmuIYeSnVtzE-hpepNxtdHBEFI8VFdF9MT8aCcI6Amptk2j2hURnjpaKRFBYvYc3991WDs2TnThAQmkcMEc6kWQMKiYlT4qxFg"
+            />
+          </div>
+          <nav class="flex flex-wrap justify-center gap-gutter">
+            <a
+              class="text-label-caps hover:text-on-surface transition-colors"
+              href="#"
+              >Privacy Policy</a
+            ><a
+              class="text-label-caps hover:text-on-surface transition-colors"
+              href="#"
+              >Terms of Service</a
+            ><a
+              class="text-label-caps hover:text-on-surface transition-colors"
+              href="#"
+              >GitHub</a
+            ><a
+              class="text-label-caps hover:text-on-surface transition-colors"
+              href="#"
+              >Contact</a
+            >
+          </nav>
+          <div class="text-label-caps">
+            © 2024 Research AI platform. Engineered for Precision.
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      fetch("/api/health")
+        .then((response) => {
+          if (!response.ok) throw new Error("Backend unavailable");
+          return response.json();
+        })
+        .then((data) => {
+          const status = document.getElementById("backendStatus");
+          if (status) {
+            status.innerHTML =
+              'Local AI backend: <span class="font-semibold text-secondary">connected</span> · ' +
+              escapeHtml(data.model || "Ollama");
+          }
+        })
+        .catch(() => {
+          const status = document.getElementById("backendStatus");
+          if (status) {
+            status.innerHTML =
+              'Local AI backend: <span class="font-semibold text-error">not connected</span>';
+          }
+        });
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+    </script>
+  </body>
+</html>
