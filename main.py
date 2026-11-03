@@ -1,12 +1,15 @@
-from datetime import datetime
+import io
+import os
 import re
+from datetime import datetime
 from pathlib import Path
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_file, send_from_directory
 from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
 
+from pdf_export import build_pdf
 from tools import search_tool, wikipedia_tool
 
 
@@ -15,24 +18,44 @@ from tools import search_tool, wikipedia_tool
 # ---------------------------------------------------------
 
 BASE_DIR = Path(__file__).resolve().parent
+REPORTS_DIR = BASE_DIR / "reports"
+
 app = Flask(__name__)
 
 
 # ---------------------------------------------------------
-# AI / Agent configuration
+# Models
+#
+# Both versions use the same model by default. To get a true
+# "two different LLMs" comparison, pull a second model with
+# Ollama and start the app with MODEL_B set, e.g.:
+#
+#   PowerShell:  $env:MODEL_B="llama3.2:3b"; python main.py
+#   CMD:         set MODEL_B=llama3.2:3b && python main.py
+#
+# The second model must support plain chat (no tool calling is
+# needed for Version B).
 # ---------------------------------------------------------
 
-llm = ChatOllama(
-    model="qwen2.5:3b",
+MODEL_A = os.getenv("MODEL_A", "qwen2.5:3b")
+MODEL_B = os.getenv("MODEL_B", MODEL_A)
+
+llm_a = ChatOllama(
+    model=MODEL_A,
     temperature=0,
+)
+
+llm_b = ChatOllama(
+    model=MODEL_B,
+    temperature=0.4,
 )
 
 
 # ---------------------------------------------------------
-# Agent prompt
+# Version A: detailed research paper (agent that uses tools)
 # ---------------------------------------------------------
 
-prompt = ChatPromptTemplate.from_messages([
+paper_prompt = ChatPromptTemplate.from_messages([
     (
         "system",
         """
@@ -101,7 +124,64 @@ appropriate.
 
 
 # ---------------------------------------------------------
-# Tools
+# Version B: short executive brief
+#
+# Written from the same research notes the agent collected
+# for Version A, so the web is only searched once. The prompt
+# asks for a different structure and tone, so the two
+# versions are genuinely different documents.
+# ---------------------------------------------------------
+
+brief_prompt = ChatPromptTemplate.from_messages([
+    (
+        "system",
+        """
+You are a research analyst writing a concise executive brief for a
+busy, non-expert reader.
+
+You are given a topic and research notes gathered from search tools.
+Base the brief on those notes. If the notes are empty or unhelpful,
+write only what you are confident is true and say that the evidence
+was limited. Do not invent unsupported facts, numbers or quotes.
+
+Write the brief in Markdown with exactly this structure:
+
+# Overview
+Two or three sentences explaining the topic in plain language.
+
+# Key Takeaways
+Four to six bullet points. Each is one clear sentence.
+
+# Why It Matters
+One short paragraph on real-world relevance.
+
+# Risks and Open Questions
+Two to four bullet points.
+
+# Bottom Line
+One or two sentences.
+
+Keep the whole brief under about 450 words.
+Use plain, direct language. No jargon without explanation.
+
+IMPORTANT:
+Return ONLY the brief.
+Do NOT return JSON.
+Do NOT mention these instructions.
+Do NOT copy the raw research notes.
+"""
+    ),
+    (
+        "human",
+        "Topic: {topic}\n\nResearch notes:\n{notes}"
+    ),
+])
+
+brief_chain = brief_prompt | llm_b
+
+
+# ---------------------------------------------------------
+# Tools and agent (Version A)
 # ---------------------------------------------------------
 
 tools = [
@@ -109,17 +189,11 @@ tools = [
     wikipedia_tool,
 ]
 
-
-# ---------------------------------------------------------
-# Create agent
-# ---------------------------------------------------------
-
 agent = create_tool_calling_agent(
-    llm=llm,
-    prompt=prompt,
+    llm=llm_a,
+    prompt=paper_prompt,
     tools=tools,
 )
-
 
 agent_executor = AgentExecutor(
     agent=agent,
@@ -152,6 +226,9 @@ def extract_urls(text):
         str(text)
     )
 
+    # Strip punctuation that is not part of the URL
+    urls = [u.rstrip(".,;:)") for u in urls]
+
     # Remove duplicates while preserving order
     return list(dict.fromkeys(urls))
 
@@ -183,49 +260,52 @@ def get_tools_used(intermediate_steps):
 
 
 # ---------------------------------------------------------
-# Save research
+# Helper: collect sources and notes from the tool output
 # ---------------------------------------------------------
 
-def save_research(topic, research, sources, tools_used):
+def get_sources(intermediate_steps):
 
-    output_file = BASE_DIR / "research_output.txt"
+    sources = []
 
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    for step in intermediate_steps or []:
+        try:
+            for url in extract_urls(str(step[1])):
+                if url not in sources:
+                    sources.append(url)
+        except Exception:
+            continue
 
-    with output_file.open("a", encoding="utf-8") as file:
+    return sources
 
-        file.write("\n")
-        file.write("=" * 80 + "\n")
-        file.write("                    RESEARCH PAPER\n")
-        file.write("=" * 80 + "\n\n")
 
-        file.write(f"Date & Time: {timestamp}\n")
-        file.write(f"Topic: {topic}\n\n")
+def get_notes(intermediate_steps, limit=6000):
+    """
+    Join the raw tool output into one block of research notes
+    for Version B. Truncated so a small local model can cope.
+    """
 
-        file.write(research)
+    parts = []
 
-        file.write("\n\nSources:\n")
+    for step in intermediate_steps or []:
+        try:
+            parts.append(str(step[1]).strip())
+        except Exception:
+            continue
 
-        if sources:
-            for source in sources:
-                file.write(f"- {source}\n")
-        else:
-            file.write("- No URL sources returned by the tools.\n")
+    notes = "\n\n".join(p for p in parts if p)
 
-        file.write("\nTools Used:\n")
+    return notes[:limit]
 
-        if tools_used:
-            for tool in tools_used:
-                file.write(f"- {tool}\n")
-        else:
-            file.write("- No tools reported.\n")
 
-        file.write("\n")
-        file.write("=" * 80 + "\n")
-        file.write("                END OF RESEARCH PAPER\n")
-        file.write("=" * 80 + "\n\n")
+# ---------------------------------------------------------
+# Helper: file names
+# ---------------------------------------------------------
 
-    return output_file
+def slugify(text, fallback="report", max_length=50):
+
+    slug = re.sub(r"[^A-Za-z0-9]+", "-", str(text or "")).strip("-").lower()
+
+    return slug[:max_length].strip("-") or fallback
 
 
 # ---------------------------------------------------------
@@ -248,15 +328,23 @@ def home():
 @app.route("/api/health", methods=["GET"])
 def health():
 
+    model_text = MODEL_A if MODEL_A == MODEL_B else f"{MODEL_A} + {MODEL_B}"
+
     return jsonify({
         "status": "ok",
         "message": "Research AI backend is running.",
-        "model": "qwen2.5:3b",
+        "model": model_text,
     })
 
 
 # ---------------------------------------------------------
 # Research
+#
+# Returns TWO versions of the report:
+#   A - detailed research paper (agent + tools)
+#   B - short executive brief
+#
+# If one version fails the other is still returned.
 # ---------------------------------------------------------
 
 @app.route("/research", methods=["POST"])
@@ -282,226 +370,204 @@ def research():
             "error": "Research topic is too long. Keep it under 500 characters."
         }), 400
 
+    print("\n")
+    print("=" * 80)
+    print("STARTING RESEARCH")
+    print("=" * 80)
+    print(f"Topic: {topic}")
+    print("=" * 80)
+
+    versions = []
+    intermediate_steps = []
+
+    # -----------------------------------------------------
+    # Version A: detailed paper (runs the tools)
+    # -----------------------------------------------------
+
+    version_a = {
+        "id": "A",
+        "label": "Version A: Detailed Paper",
+        "description": "In-depth research paper written by the tool-using agent.",
+        "model": MODEL_A,
+        "content": "",
+        "sources": [],
+        "tools_used": [],
+        "error": None,
+    }
+
     try:
-
-        print("\n")
-        print("=" * 80)
-        print("STARTING RESEARCH")
-        print("=" * 80)
-        print(f"Topic: {topic}")
-        print("=" * 80)
-
-        # -------------------------------------------------
-        # Run agent
-        # -------------------------------------------------
 
         raw_response = agent_executor.invoke({
             "query": topic,
             "chat_history": [],
         })
 
-        # -------------------------------------------------
-        # IMPORTANT:
-        # Take exactly what the AI generated.
-        # No Pydantic parsing.
-        # No JSON parsing.
-        # -------------------------------------------------
+        paper = str(raw_response.get("output", "")).strip()
 
-        research_output = str(
-            raw_response.get("output", "")
-        ).strip()
+        if not paper:
+            raise RuntimeError("The research agent returned an empty response.")
 
-        if not research_output:
+        intermediate_steps = raw_response.get("intermediate_steps", [])
 
-            raise Exception(
-                "The research agent returned an empty response."
-            )
-
-        # -------------------------------------------------
-        # Get actual tools used
-        # -------------------------------------------------
-
-        intermediate_steps = raw_response.get(
-            "intermediate_steps",
-            []
-        )
-
-        tools_used = get_tools_used(
-            intermediate_steps
-        )
-
-        # -------------------------------------------------
-        # Get URLs from actual tool output
-        # -------------------------------------------------
-
-        sources = []
-
-        for step in intermediate_steps:
-
-            try:
-
-                tool_output = step[1]
-
-                urls = extract_urls(
-                    str(tool_output)
-                )
-
-                for url in urls:
-
-                    if url not in sources:
-                        sources.append(url)
-
-            except Exception:
-                continue
-
-        # -------------------------------------------------
-        # Debug information
-        # -------------------------------------------------
-
-        print("\n")
-        print("=" * 80)
-        print("FINAL AI OUTPUT")
-        print("=" * 80)
-
-        print(research_output)
-
-        print("\n")
-        print("=" * 80)
-        print("TOOLS USED")
-        print("=" * 80)
-
-        print(tools_used)
-
-        print("\n")
-        print("=" * 80)
-        print("SOURCES")
-        print("=" * 80)
-
-        print(sources)
-
-        print("\n")
-        print("=" * 80)
-        print("RESEARCH COMPLETE")
-        print("=" * 80)
-
-        # -------------------------------------------------
-        # Return directly to frontend
-        # -------------------------------------------------
-
-        return jsonify({
-
-            "success": True,
-
-            "research": {
-
-                "topic": topic,
-
-                # THIS IS THE ACTUAL AI OUTPUT
-                "content": research_output,
-
-                "sources": sources,
-
-                "tools_used": tools_used,
-            }
-
-        })
+        version_a["content"] = paper
+        version_a["tools_used"] = get_tools_used(intermediate_steps)
+        version_a["sources"] = get_sources(intermediate_steps)
 
     except Exception as exc:
 
-        app.logger.exception(
-            "Research request failed"
-        )
+        app.logger.exception("Version A failed")
+
+        version_a["error"] = str(exc) or "Version A failed."
+
+    versions.append(version_a)
+
+    # -----------------------------------------------------
+    # Version B: executive brief (from the same notes)
+    # -----------------------------------------------------
+
+    version_b = {
+        "id": "B",
+        "label": "Version B: Executive Brief",
+        "description": "Short, plain-language summary of the same research.",
+        "model": MODEL_B,
+        "content": "",
+        "sources": list(version_a["sources"]),
+        "tools_used": list(version_a["tools_used"]),
+        "error": None,
+    }
+
+    try:
+
+        notes = get_notes(intermediate_steps) or "(No research notes were collected.)"
+
+        brief_response = brief_chain.invoke({
+            "topic": topic,
+            "notes": notes,
+        })
+
+        brief = str(getattr(brief_response, "content", brief_response)).strip()
+
+        if not brief:
+            raise RuntimeError("The model returned an empty brief.")
+
+        version_b["content"] = brief
+
+    except Exception as exc:
+
+        app.logger.exception("Version B failed")
+
+        version_b["error"] = str(exc) or "Version B failed."
+
+    versions.append(version_b)
+
+    # -----------------------------------------------------
+    # Result
+    # -----------------------------------------------------
+
+    print("\n")
+    print("=" * 80)
+    for version in versions:
+        status = "ERROR: " + version["error"] if version["error"] else "OK"
+        print(f"{version['label']}: {status}")
+        print(f"  tools: {version['tools_used']}")
+        print(f"  sources: {len(version['sources'])}")
+    print("=" * 80)
+
+    if all(v["error"] for v in versions):
 
         return jsonify({
-
             "success": False,
-
-            "error": str(exc),
-
+            "error": version_a["error"],
         }), 500
 
+    return jsonify({
+        "success": True,
+        "research": {
+            "topic": topic,
+            "versions": versions,
+        }
+    })
+
 
 # ---------------------------------------------------------
-# Save
+# Download / save as PDF
+#
+# The browser sends the version the user picked; the server
+# builds a PDF, keeps a copy in the reports/ folder and sends
+# the PDF back as a download.
 # ---------------------------------------------------------
 
-@app.route("/save", methods=["POST"])
-def save():
+@app.route("/download-pdf", methods=["POST"])
+def download_pdf():
 
-    data = request.get_json(
-        silent=True
-    ) or {}
+    data = request.get_json(silent=True) or {}
 
-    research_data = data.get(
-        "research",
-        {}
-    )
+    topic = str(data.get("topic") or "Research Report").strip()
+    content = str(data.get("content") or "")
+    version_label = str(data.get("version_label") or "")
+    model = str(data.get("model") or "")
 
-    topic = str(
-        research_data.get(
-            "topic",
-            "Research"
-        )
-    )
+    sources = data.get("sources") or []
+    tools_used = data.get("tools_used") or []
 
-    content = str(
-        research_data.get(
-            "content",
-            ""
-        )
-    )
+    if not isinstance(sources, list):
+        sources = []
 
-    sources = research_data.get(
-        "sources",
-        []
-    )
-
-    tools_used = research_data.get(
-        "tools_used",
-        []
-    )
+    if not isinstance(tools_used, list):
+        tools_used = []
 
     if not content.strip():
 
         return jsonify({
-
             "success": False,
-
             "error": "No research content to save."
+        }), 400
 
+    if len(content) > 200_000:
+
+        return jsonify({
+            "success": False,
+            "error": "Research content is too large to export."
         }), 400
 
     try:
 
-        output_file = save_research(
-            topic,
-            content,
-            sources,
-            tools_used
+        pdf_bytes = build_pdf(
+            topic=topic,
+            content=content,
+            sources=[str(s) for s in sources],
+            tools_used=[str(t) for t in tools_used],
+            version_label=version_label,
+            model=model,
         )
 
-        return jsonify({
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
 
-            "success": True,
+        version_tag = slugify(version_label.split(":")[0], fallback="report")
 
-            "message": "Research successfully saved.",
+        filename = f"{slugify(topic)}-{version_tag}-{timestamp}.pdf"
 
-            "filename": output_file.name,
+        # Keep a copy on disk as well (best effort)
+        try:
+            REPORTS_DIR.mkdir(exist_ok=True)
+            (REPORTS_DIR / filename).write_bytes(pdf_bytes)
+        except OSError:
+            app.logger.warning("Could not save a copy in %s", REPORTS_DIR)
 
-        })
+        return send_file(
+            io.BytesIO(pdf_bytes),
+            mimetype="application/pdf",
+            as_attachment=True,
+            download_name=filename,
+        )
 
     except Exception as exc:
 
-        app.logger.exception(
-            "Saving research failed"
-        )
+        app.logger.exception("PDF export failed")
 
         return jsonify({
-
             "success": False,
-
-            "error": str(exc),
-
+            "error": f"Could not create the PDF: {exc}",
         }), 500
 
 
@@ -518,7 +584,9 @@ if __name__ == "__main__":
     )
 
     print(
-        "Make sure Ollama is running and qwen2.5:3b is installed.\n"
+        f"Make sure Ollama is running and {MODEL_A}"
+        + ("" if MODEL_A == MODEL_B else f" and {MODEL_B}")
+        + " installed.\n"
     )
 
     app.run(

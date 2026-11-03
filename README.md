@@ -2,30 +2,31 @@
 
 Research AI is a locally run, AI-assisted research paper generation application. It combines a browser-based interface with a Flask backend, a locally hosted language model through Ollama, and research tools for gathering and synthesizing information.
 
-Users submit a research topic through the web interface. The research agent can use the configured search and Wikipedia tools, then generates a structured research-paper-style response. The interface displays the result and available source/tool information, and users can save completed research to a local text file.
+Users submit a research topic through the web interface. The research agent can use the configured search and Wikipedia tools, then generates a structured research-paper-style response. Each topic produces **two versions** of the report (a detailed research paper and a short executive brief). The interface shows both in tabs, along with source/tool information, and the user can download whichever version they prefer as a **PDF**.
 
 ## Features
 
 - Accepts natural-language research topics.
 - Generates structured, research-paper-style responses.
+- Produces two different versions for every topic: **Version A** (detailed paper, written by the tool-using agent) and **Version B** (concise executive brief written from the same research notes). Optionally Version B can use a second LLM (see below).
 - Runs the language model locally through Ollama using `qwen2.5:3b`.
 - Uses LangChain to coordinate the model and configured research tools.
 - Integrates web-search and Wikipedia tools defined in `tools.py`.
 - Provides a browser-based interface for submitting topics and reading results.
 - Displays source URLs and tools reported for the research run.
-- Allows completed research to be saved to `research_output.txt`.
+- **Save Report / Download PDF**: exports the selected version as a formatted PDF (title, headings, lists, sources, tools used). A copy is also kept in the `reports/` folder.
 - Includes a backend health check and terminal logging.
 
 ## Technology Stack
 
-| Component | Technology |
-|---|---|
-| Frontend | HTML, CSS, JavaScript |
-| Backend | Python, Flask |
-| Language-model runtime | Ollama |
-| Language model | Qwen2.5:3B |
-| Agent orchestration | LangChain |
-| Research tools | Search and Wikipedia integrations configured in `tools.py` |
+| Component              | Technology                                                 |
+| ---------------------- | ---------------------------------------------------------- |
+| Frontend               | HTML, CSS, JavaScript                                      |
+| Backend                | Python, Flask                                              |
+| Language-model runtime | Ollama                                                     |
+| Language model         | Qwen2.5:3B                                                 |
+| Agent orchestration    | LangChain                                                  |
+| Research tools         | Search and Wikipedia integrations configured in `tools.py` |
 
 ## Project Structure
 
@@ -36,17 +37,18 @@ ai-agent/
 ├── main.py                 # Main Flask application and research agent
 ├── backupmain.py           # Backup copy of the backend; not used to start the app
 ├── tools.py                # Research tool definitions
+├── pdf_export.py           # Builds the PDF report (ReportLab)
+├── reports/                # PDFs saved by the app (created automatically)
 ├── index.html              # Web interface served by Flask
 ├── templates/               # Existing folder; retain if used by your code
 ├── requirements.txt        # Python dependencies
 ├── .env                    # Local environment configuration, if needed
 ├── .gitignore              # Files excluded from Git
-├── research_output.txt     # Locally saved research; generated/updated by the app
 ├── venv/                   # Local Python virtual environment; do not commit
 └── README.md               # Project documentation
 ```
 
-The `venv/`, `__pycache__/`, `.env`, and `research_output.txt` entries are local/runtime files and should not be uploaded to a public repository. `backupmain.py` is retained as a backup; run `main.py` for the application.
+The `venv/`, `__pycache__/`, `.env`, and `reports/` entries are local/runtime files and should not be uploaded to a public repository. `backupmain.py` is retained as a backup; run `main.py` for the application.
 
 ## Prerequisites
 
@@ -101,6 +103,8 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+Make sure `requirements.txt` includes `reportlab` (used for PDF export). If it is missing, run `pip install reportlab` and add the line `reportlab` to the file.
+
 Keep `requirements.txt` in the repository. If a dependency is missing at runtime, check the import in `main.py` or `tools.py`, add the corresponding package to `requirements.txt`, and reinstall the requirements.
 
 ### 4. Install Ollama and download the model
@@ -129,12 +133,25 @@ Confirm that these files and folders are present:
 
 - `main.py`
 - `tools.py`
+- `pdf_export.py`
 - `index.html` (in the project root)
 - `requirements.txt`
 
 The current backend serves `index.html` from the project root. Keep the root-level `index.html` alongside `main.py`. The `templates/` folder is present in your local directory, but do not move the root-level HTML file into it unless you also change the Flask route.
 
-### 6. Run the application
+### 6. (Optional) Use a second LLM for Version B
+
+By default both versions use `qwen2.5:3b`. To compare two different models, pull another one and set `MODEL_B` before starting the app:
+
+```powershell
+ollama pull llama3.2:3b
+$env:MODEL_B = "llama3.2:3b"
+python main.py
+```
+
+Version A always runs the tool-using agent, so `MODEL_A` (default `qwen2.5:3b`) must support tool calling. Version B is plain text generation, so any chat model works.
+
+### 7. Run the application
 
 From the project root, with the virtual environment activated and Ollama running, execute:
 
@@ -152,24 +169,24 @@ Keep the terminal open while using the application. The terminal displays backen
 
 1. Open the application in your browser.
 2. Enter a clear research topic in the research input.
-3. Submit the topic and wait while the agent gathers information and generates the response.
-4. Read the generated research paper in the results area.
+3. Submit the topic and wait while the agent gathers information and writes both versions (this takes longer than a single version).
+4. Read the results. Use the tabs to switch between **Version A: Detailed Paper** and **Version B: Executive Brief**.
 5. Review the source URLs and tools shown by the application. Open and verify sources before relying on them.
-6. Use **Save Research** to save the completed result to `research_output.txt`, if that feature is available in the current interface.
+6. Click **Download PDF** (next to the tabs) or **Save Report (PDF)** (bottom of the page) to download the version you are viewing as a PDF.
 7. Submit another topic when you want to begin a new research run.
 
-Generation time depends on your hardware, model, topic complexity, and external research tools. Saved research is stored locally; it is not automatically uploaded to GitHub.
+Generation time depends on your hardware, model, topic complexity, and external research tools. PDFs are also stored locally in the `reports/` folder; they are not uploaded to GitHub.
 
 ## Backend Routes
 
 The backend routes currently expected by the frontend are:
 
-| Route | Method | Purpose |
-|---|---|---|
-| `/` | GET | Serves the web interface. |
-| `/api/health` | GET | Checks whether the backend is responding. |
-| `/research` | POST | Accepts a research topic and returns the generated result. |
-| `/save` | POST | Saves a completed research result to a local text file. |
+| Route           | Method | Purpose                                                                                       |
+| --------------- | ------ | --------------------------------------------------------------------------------------------- |
+| `/`             | GET    | Serves the web interface.                                                                     |
+| `/api/health`   | GET    | Checks whether the backend is responding.                                                     |
+| `/research`     | POST   | Accepts a research topic and returns both versions (`research.versions`).                     |
+| `/download-pdf` | POST   | Receives the chosen version and returns it as a PDF download (a copy is saved in `reports/`). |
 
 If routes are changed in `main.py`, update this table to match the implementation.
 
@@ -213,15 +230,17 @@ The search and Wikipedia integrations may depend on internet access and external
 
 Local inference performance depends on available memory, CPU/GPU resources, and model size. External search requests can also add delay. Try a more focused query and check the terminal for errors.
 
-### Saved research is missing
+### PDF download fails
 
-Check whether `research_output.txt` exists in the project directory. The file is local to the machine running the Flask backend. It is excluded from Git so that personal or generated research is not accidentally published.
+- Run `pip install reportlab` inside the virtual environment.
+- Check the Flask terminal for the error message.
+- Saved copies are in the `reports/` folder next to `main.py`; the folder is excluded from Git.
 
 ## Privacy and Repository Hygiene
 
 Before publishing the repository:
 
-- Ensure `.gitignore` excludes `venv/`, `__pycache__/`, `.env`, and `research_output.txt`.
+- Ensure `.gitignore` excludes `venv/`, `__pycache__/`, `.env`, and `reports/`.
 - Do not commit API keys, passwords, personal data, or private configuration.
 - Review `backupmain.py` before publishing it; it is not needed to run the main application and may contain older code.
 - Keep the Python source files, root-level `index.html`, `tools.py`, `requirements.txt`, and this README in the repository.
@@ -235,7 +254,7 @@ Before publishing the repository:
 
 ## Future Improvements
 
-Potential extensions include PDF/DOCX export, stronger source verification, additional academic sources, improved error recovery, and searchable research history.
+Potential extensions include DOCX export, stronger source verification, additional academic sources, improved error recovery, and searchable research history.
 
 ## License
 
